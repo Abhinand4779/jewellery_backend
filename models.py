@@ -12,12 +12,12 @@ class ProductBase(SQLModel):
     """Shared fields used by both the DB table and API schemas."""
     name: str
     price: float
-    original_price: Optional[float] = None
-    discount: Optional[float] = None          # percentage, e.g. 12.5
-    category: Optional[str] = None
-    sub: Optional[str] = None                  # subcategory
-    description: Optional[str] = None
-    image: Optional[str] = None
+    original_price: Optional[float] = Field(default=None)
+    discount: Optional[float] = Field(default=None)          # percentage, e.g. 12.5
+    category: Optional[str] = Field(default=None)
+    sub: Optional[str] = Field(default=None)                  # subcategory
+    description: Optional[str] = Field(default=None)
+    image: Optional[str] = Field(default=None)
     images: Optional[List[str]] = Field(default=None, sa_column=Column(JSON))
     highlights: Optional[List[str]] = Field(default=None, sa_column=Column(JSON))
     features: Optional[List[str]] = Field(default=None, sa_column=Column(JSON))
@@ -39,22 +39,22 @@ class ProductCreate(ProductBase):
 
 class ProductUpdate(SQLModel):
     """Schema used when partially updating a product (all fields optional)."""
-    name: Optional[str] = None
-    price: Optional[float] = None
-    original_price: Optional[float] = None
-    discount: Optional[float] = None
-    category: Optional[str] = None
-    sub: Optional[str] = None
-    description: Optional[str] = None
-    image: Optional[str] = None
-    images: Optional[List[str]] = None
-    highlights: Optional[List[str]] = None
-    features: Optional[List[str]] = None
-    rating: Optional[float] = None
-    review_count: Optional[int] = None
-    in_stock: Optional[bool] = None
-    stock_quantity: Optional[int] = None
-    is_featured: Optional[bool] = None
+    name: Optional[str] = Field(default=None)
+    price: Optional[float] = Field(default=None)
+    original_price: Optional[float] = Field(default=None)
+    discount: Optional[float] = Field(default=None)
+    category: Optional[str] = Field(default=None)
+    sub: Optional[str] = Field(default=None)
+    description: Optional[str] = Field(default=None)
+    image: Optional[str] = Field(default=None)
+    images: Optional[List[str]] = Field(default=None)
+    highlights: Optional[List[str]] = Field(default=None)
+    features: Optional[List[str]] = Field(default=None)
+    rating: Optional[float] = Field(default=None)
+    review_count: Optional[int] = Field(default=None)
+    in_stock: Optional[bool] = Field(default=None)
+    stock_quantity: Optional[int] = Field(default=None)
+    is_featured: Optional[bool] = Field(default=None)
 
 
 # ---------------------------------------------------------------------------
@@ -65,8 +65,8 @@ class User(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     email: str = Field(index=True, unique=True)
     hashed_password: str
-    full_name: Optional[str] = None
-    phone: Optional[str] = None
+    full_name: Optional[str] = Field(default=None)
+    phone: Optional[str] = Field(default=None)
     is_active: bool = True
     is_admin: bool = False
     created_at: datetime = Field(
@@ -83,7 +83,7 @@ class Review(SQLModel, table=True):
     user_id: int = Field(foreign_key="user.id")
     product_id: int = Field(foreign_key="product.id")
     rating: int = Field(ge=1, le=5)
-    comment: Optional[str] = None
+    comment: Optional[str] = Field(default=None)
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc)
     )
@@ -126,7 +126,7 @@ class Order(SQLModel, table=True):
     user_id: int = Field(foreign_key="user.id")
     status: str = Field(default="pending")   # pending | confirmed | shipped | delivered | cancelled
     total: float = 0.0
-    shipping_address: Optional[str] = None   # JSON string or plain text address
+    shipping_address: Optional[str] = Field(default=None)   # JSON string or plain text address
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc)
     )
