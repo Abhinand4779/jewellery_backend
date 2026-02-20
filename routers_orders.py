@@ -16,7 +16,7 @@ PATCH /orders/admin/{order_id}/status           – update order status
 from typing import Any, Dict, List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlmodel import Session, select
 
 import models
@@ -72,7 +72,7 @@ VALID_STATUSES = {"pending", "confirmed", "shipped", "delivered", "cancelled"}
 # ---------------------------------------------------------------------------
 
 class OrderCreate(BaseModel):
-    shipping_address: Optional[str] = None
+    shipping_address: Optional[str] = Field(default=None)
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)

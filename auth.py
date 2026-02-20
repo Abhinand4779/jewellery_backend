@@ -16,7 +16,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from sqlmodel import Session, select
 
 import models
@@ -43,8 +43,8 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
-    full_name: Optional[str] = None
-    phone: Optional[str] = None
+    full_name: Optional[str] = Field(default=None)
+    phone: Optional[str] = Field(default=None)
 
 
 class UserPublic(BaseModel):

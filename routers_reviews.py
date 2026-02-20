@@ -9,7 +9,7 @@ DELETE /reviews/{id}                  – delete a review (owner or admin)
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlmodel import Session, select
 
 import models
@@ -25,7 +25,7 @@ router = APIRouter(prefix="/reviews", tags=["reviews"])
 
 class ReviewCreate(BaseModel):
     rating: int
-    comment: Optional[str] = None
+    comment: Optional[str] = Field(default=None)
 
 
 class ReviewOut(BaseModel):
@@ -33,9 +33,9 @@ class ReviewOut(BaseModel):
     user_id: int
     product_id: int
     rating: int
-    comment: Optional[str] = None
+    comment: Optional[str] = Field(default=None)
     created_at: str
-    user_name: Optional[str] = None
+    user_name: Optional[str] = Field(default=None)
 
 # ---------------------------------------------------------------------------
 # Routes
