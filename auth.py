@@ -43,8 +43,8 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
-    full_name: Optional[str] = Field(default=None)
-    phone: Optional[str] = Field(default=None)
+    full_name: str | None = Field(default=None)
+    phone: str | None = Field(default=None)
 
 
 class UserPublic(BaseModel):
@@ -52,8 +52,8 @@ class UserPublic(BaseModel):
 
     id: int
     email: str
-    full_name: Optional[str] = Field(default=None)
-    phone: Optional[str] = Field(default=None)
+    full_name: str | None = Field(default=None)
+    phone: str | None = Field(default=None)
     is_admin: bool
     is_active: bool
 

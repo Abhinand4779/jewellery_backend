@@ -72,7 +72,7 @@ VALID_STATUSES = {"pending", "confirmed", "shipped", "delivered", "cancelled"}
 # ---------------------------------------------------------------------------
 
 class OrderCreate(BaseModel):
-    shipping_address: Optional[str] = Field(default=None)
+    shipping_address: str | None = Field(default=None)
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)

@@ -25,7 +25,7 @@ router = APIRouter(prefix="/reviews", tags=["reviews"])
 
 class ReviewCreate(BaseModel):
     rating: int
-    comment: Optional[str] = Field(default=None)
+    comment: str | None = Field(default=None)
 
 
 class ReviewOut(BaseModel):
@@ -33,9 +33,9 @@ class ReviewOut(BaseModel):
     user_id: int
     product_id: int
     rating: int
-    comment: Optional[str] = Field(default=None)
+    comment: str | None = Field(default=None)
     created_at: str
-    user_name: Optional[str] = Field(default=None)
+    user_name: str | None = Field(default=None)
 
 # ---------------------------------------------------------------------------
 # Routes
