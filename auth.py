@@ -16,7 +16,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 from sqlmodel import Session, select
 
 import models
@@ -48,15 +48,14 @@ class UserCreate(BaseModel):
 
 
 class UserPublic(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     email: str
-    full_name: Optional[str] = None
-    phone: Optional[str] = None
+    full_name: Optional[str] = Field(default=None)
+    phone: Optional[str] = Field(default=None)
     is_admin: bool
     is_active: bool
-
-    class Config:
-        from_attributes = True
 
 
 class Token(BaseModel):
