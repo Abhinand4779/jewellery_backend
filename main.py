@@ -48,22 +48,29 @@ app = FastAPI(
 # CORS
 # ---------------------------------------------------------------------------
 
-# Collect allowed origins from env; fallback to localhost for development
-_frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
+# Collect allowed origins from env; fallback to allow all in production for simplicity if needed
+_frontend_url = os.getenv("FRONTEND_URL", "*")
 ALLOWED_ORIGINS: list[str] = [
     origin.strip()
     for origin in _frontend_url.split(",")
     if origin.strip()
 ]
+
 # Always allow local dev servers
 for _local in ["http://localhost:5173", "http://localhost:3000", "http://127.0.0.1:5173"]:
-    if _local not in ALLOWED_ORIGINS:
+    if _local not in ALLOWED_ORIGINS and "*" not in ALLOWED_ORIGINS:
         ALLOWED_ORIGINS.append(_local)
+
+# Starlette/FastAPI CORS restriction: 
+# Cannot use allow_origins=["*"] with allow_credentials=True.
+_allow_credentials = True
+if "*" in ALLOWED_ORIGINS:
+    _allow_credentials = False
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,   # explicit list — never "*" with credentials
-    allow_credentials=True,
+    allow_origins=ALLOWED_ORIGINS,
+    allow_credentials=_allow_credentials,
     allow_methods=["*"],
     allow_headers=["*"],
 )
