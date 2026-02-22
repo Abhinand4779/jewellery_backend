@@ -18,6 +18,7 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 from sqlmodel import Session, select
+import bcrypt
 
 import models
 from database import get_session
@@ -67,12 +68,17 @@ class Token(BaseModel):
 # Utility functions
 # ---------------------------------------------------------------------------
 
-def verify_password(plain: str, hashed: str) -> bool:
-    return pwd_context.verify(plain, hashed)
 
+
+def verify_password(plain: str, hashed: str) -> bool:
+    # Manual bcrypt check to bypass passlib bug
+    return bcrypt.checkpw(plain.encode('utf-8'), hashed.encode('utf-8'))
 
 def get_password_hash(password: str) -> str:
-    return pwd_context.hash(password)
+    # Manual bcrypt hashing to bypass passlib bug
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
+    return hashed.decode('utf-8')
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
