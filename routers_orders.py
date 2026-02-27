@@ -31,7 +31,8 @@ router = APIRouter(prefix="/orders", tags=["orders"])
 # ---------------------------------------------------------------------------
 
 def _order_detail(order: models.Order, session: Session) -> Dict[str, Any]:
-    """Attach order-items (with product snapshots) to an order dict."""
+    """Attach order-items (with product snapshots) and customer email to an order dict."""
+    user = session.get(models.User, order.user_id)
     items = session.exec(
         select(models.OrderItem).where(models.OrderItem.order_id == order.id)
     ).all()
@@ -53,8 +54,11 @@ def _order_detail(order: models.Order, session: Session) -> Dict[str, Any]:
     return {
         "id": order.id,
         "user_id": order.user_id,
+        "user_email": user.email if user else "Unknown",
+        "user_name": user.full_name if user else "Unknown",
         "status": order.status,
         "total": order.total,
+        "shipping_address": order.shipping_address,
         "created_at": order.created_at,
         "items": items_out,
     }
