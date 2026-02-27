@@ -202,3 +202,12 @@ def login(
 def get_me(current_user: models.User = Depends(get_current_active_user)) -> models.User:
     """Return the currently authenticated user's profile."""
     return current_user
+
+
+@router.get("/users/all", response_model=list[UserPublic])
+def list_all_users(
+    session: Session = Depends(get_session),
+    _admin: models.User = Depends(require_admin),
+) -> list[models.User]:
+    """Return all registered users. Admin only."""
+    return session.exec(select(models.User).order_by(models.User.created_at.desc())).all()
